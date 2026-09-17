@@ -83,7 +83,7 @@ footer .names{font-size:2.6rem}
 <body>
 
 <button id="music" title="موسیقی">♫</button>
-<audio id="audio" loop src="music.mp3"></audio>
+<audio id="audio" loop autoplay src="music.mp3"></audio>
 
 <section class="hero">
   <p class="en">we joyfully invite you to the wedding of</p>
@@ -186,7 +186,9 @@ document.querySelectorAll('.fade').forEach(el=>io.observe(el));
 const au=document.getElementById('audio'),mb=document.getElementById('music');
 mb.onclick=()=>{if(au.paused){au.play().catch(()=>{});mb.classList.add('on')}else{au.pause();mb.classList.remove('on')}};
 rsvp.onsubmit=e=>{e.preventDefault();rsvp.style.display='none';thanks.style.display='block'};
-document.addEventListener('click',()=>{if(au.paused){au.play().then(()=>mb.classList.add('on')).catch(()=>{})}},{once:true});
+function startMusic(){if(au.paused){au.play().then(()=>{mb.classList.add('on');['click','touchstart','scroll','keydown'].forEach(ev=>removeEventListener(ev,startMusic))}).catch(()=>{})}}
+startMusic();
+['click','touchstart','scroll','keydown'].forEach(ev=>addEventListener(ev,startMusic,{passive:true}));
 </script>
 </body>
 </html>
