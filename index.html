@@ -51,9 +51,9 @@ h2{font-family:'Noto Nastaliq Urdu',serif;font-weight:400;font-size:1.8rem;color
 #intro p{position:absolute;bottom:12vh;width:100%;text-align:center;color:var(--muted);font-size:.9rem;animation:pulse 2.4s infinite}
 @keyframes pulse{50%{opacity:.35}}
 /* ---------- hero ---------- */
-.hero{height:100svh;max-width:none;padding:0;display:grid;place-items:center;overflow:clip;position:relative}
+.hero{height:100svh;max-width:none;padding:0;display:grid;place-items:center;overflow:clip;position:relative;--vo:1}
 .hero .bg{position:fixed;top:0;left:0;right:0;width:100%;height:100lvh;object-fit:cover;opacity:.55;will-change:transform;z-index:0}
-.hero::after{content:"";position:fixed;inset:0;z-index:1;background:linear-gradient(180deg,#0f0d0bcc,#0f0d0b55 40%,#0f0d0b)}
+.hero::after{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:var(--vo);background:linear-gradient(180deg,#0f0d0bcc,#0f0d0b55 40%,#0f0d0b)}
 .hero .in{position:relative;z-index:3}
 .names{font-family:'Noto Nastaliq Urdu',serif;font-size:clamp(2.3rem,9vw,4.6rem);line-height:2;color:var(--gold)}
 .names small{display:block;font-size:.4em;color:var(--ink);opacity:.7}
@@ -227,7 +227,10 @@ document.querySelectorAll('.rev').forEach(el=>io.observe(el));
 /* parallax */
 const bg=$('#bg');let tick=false;
 addEventListener('scroll',()=>{if(tick)return;tick=true;requestAnimationFrame(()=>{const y=Math.min(scrollY,innerHeight);
- bg.style.transform=`translate3d(0,${y*-.12}px,0) scale(1.06)`;bg.style.opacity=Math.max(0,.55-y/innerHeight*.55);tick=false})},{passive:true});
+ const f=Math.max(0,1-y/innerHeight);
+ bg.style.transform=`translate3d(0,${y*-.12}px,0) scale(1.06)`;bg.style.opacity=(.55*f).toFixed(3);
+ document.querySelector('.hero').style.setProperty('--vo',f.toFixed(3));
+ bg.style.visibility=f<=0?'hidden':'visible';tick=false})},{passive:true});
 /* music */
 const au=$('#audio'),pb=$('#pbtn'),dock=$('#dock');
 const sync=()=>{pb.textContent=au.paused?'▶':'❚❚';dock.classList.toggle('on',!au.paused)};
